@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Reply in X</title>
+<style>
+  :root { color-scheme: dark; }
+  body { margin: 0; min-height: 100svh; display: grid; place-items: center; background: #0b0b0f;
+         color: #e7e7ea; font: 16px/1.4 -apple-system, system-ui, sans-serif; }
+  main { width: min(92vw, 420px); text-align: center; }
+  a.go { display: block; padding: 16px; border-radius: 14px; background: #fff; color: #000;
+         font-weight: 700; text-decoration: none; margin: 16px 0 10px; }
+  p { color: #9a9aa3; font-size: 14px; word-break: break-word; }
+  a.web { color: #9a9aa3; font-size: 13px; }
+</style>
+</head>
+<body>
+<main>
+  <p id="text"></p>
+  <a class="go" id="go" href="#">Open reply in X</a>
+  <a class="web" id="web" href="#">Open on the web instead</a>
+</main>
+<script>
+  // ?id=<post id>&t=<reply text>. X's iPhone app shows x.com/intent links as a web page,
+  // but its own twitter:// link opens the native reply box. Telegram buttons only take https,
+  // hence this page. Nothing is stored or sent anywhere.
+  var q = new URLSearchParams(location.search);
+  var id = (q.get("id") || "").replace(/\D/g, "");
+  var t = q.get("t") || "";
+  var app = "twitter://post?message=" + encodeURIComponent(t) + (id ? "&in_reply_to_status_id=" + id : "");
+  var web = "https://x.com/intent/post?text=" + encodeURIComponent(t) + (id ? "&in_reply_to=" + id : "");
+  document.getElementById("text").textContent = t;
+  document.getElementById("go").href = app;
+  document.getElementById("web").href = web;
+  if (/iPhone|iPad|Android/.test(navigator.userAgent)) location.href = app;
+</script>
+</body>
+</html>
